@@ -14,6 +14,8 @@ import java.sql.Time;
 
 import javax.swing.plaf.TextUI;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 //import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -45,19 +47,21 @@ public class Robot extends TimedRobot {
   private final MotorController m_leftMotor = new Talon(0);
   private final MotorController m_rightMotor = new Talon(1);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
-  private final MotorController intakeMotor = new PWMTalonSRX(2);
+  private final MotorController intakeMotor = new Talon(2);
   private final MotorController intakeRasingMotor = new PWMVictorSPX(5);
   private final MotorController loaderMotor = new PWMTalonSRX(3);
   private final MotorController shooterMotor = new PWMTalonSRX(4);
   private final MotorController hangerMotor = new PWMTalonSRX(6);
   private final DigitalInput lowerIntakeLimitSwitch = new DigitalInput(4);
   private final DigitalInput upperIntakeLimitSwitch = new DigitalInput(5);
+  private final TalonSRX EncoderMotor = new TalonSRX(6);
   //private final AHRS ahrs;
 
   private double shooterSpeed = 0;
   private int autoStage = 0;
   private double lastTime = 15;
   private Servo hangerServo = new Servo(7);
+  private double driveSpeed = 0;
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -70,7 +74,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
     m_leftStick = new Joystick(0);
     m_rightStick = new Joystick(1);
-    m_leftMotor.setInverted(true);
+    m_rightMotor.setInverted(true);
     intakeMotor.setInverted(true);
     intakeRasingMotor.setInverted(true);
     loaderMotor.setInverted(true);
@@ -162,8 +166,17 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
    /** takes input from the joystick and controls the drive motors using arcade drive */
+    System.out.println(EncoderMotor);
     if (m_leftStick.getRawButton(1)){
       m_robotDrive.arcadeDrive(((-m_leftStick.getY())/2), ((m_leftStick.getX())/2));
+       //System.out.println("y");
+      //System.out.println(-m_leftStick.getY()/2);
+      //System.out.println("x");
+      //System.out.println(-m_leftStick.getX()/2);
+      //System.out.println("r");
+      //System.out.println(m_rightMotor.get());
+      //System.out.println("l");
+      //System.out.println(m_leftMotor.get());
     }
     else{
       m_robotDrive.arcadeDrive(-m_leftStick.getY(), m_leftStick.getX());
