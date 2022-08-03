@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import com.kauailabs.navx.frc.AHRS;
 
+import java.beans.Encoder;
 import java.sql.Time;
-
 import javax.swing.plaf.TextUI;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -67,6 +67,7 @@ public class Robot extends TimedRobot {
   //private final TalonSRX encoderMotor = new TalonSRX(6);
   private final WPI_TalonSRX encoderMotor = new WPI_TalonSRX(6);
   //private final AHRS ahrs;
+  private final Encoder shooterEncoder = new Encoder(0,1);
 
   private double shooterSpeed = 0;
   private int autoStage = 0;
@@ -75,6 +76,7 @@ public class Robot extends TimedRobot {
   private double driveSpeed = 0;
   private double drivePos = 0;
   private double driveVelocity = 0;
+  private double shooterEncoderValue = 0;
   
   
   /**
@@ -192,9 +194,12 @@ public class Robot extends TimedRobot {
       driveSpeed = encoderMotor.getSpeed();
       drivePos = encoderMotor.getEncPosition();
       driveVelocity = encoderMotor.getEncVelocity();
+      
       System.out.println("speed" + driveSpeed);
       System.out.println("pos" + drivePos);
       System.out.println("velocity" + driveVelocity);
+      
+      
      
     }
     else{
@@ -245,6 +250,8 @@ public class Robot extends TimedRobot {
     }
     /** sets the shooter speed each time through the loop. This is nessesary if the motor shuts off without an input. */
     shooterMotor.set(shooterSpeed);
+    shooterEncoderValue = shooterEncoder.getRate();
+    System.out.println("Shooter encoder rate" + shooterEncoderValue);
 
     /** controls the hanger motor */
     if(m_rightStick.getRawButton(11)){
