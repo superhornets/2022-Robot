@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import com.kauailabs.navx.frc.AHRS;
 
@@ -28,6 +29,14 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMTalonFX;
 import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
 import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.StatusFrameRate;
+import com.ctre.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.ctre.phoenix.motorcontrol.can.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -54,7 +63,9 @@ public class Robot extends TimedRobot {
   private final MotorController hangerMotor = new PWMTalonSRX(6);
   private final DigitalInput lowerIntakeLimitSwitch = new DigitalInput(4);
   private final DigitalInput upperIntakeLimitSwitch = new DigitalInput(5);
-  private final TalonSRX EncoderMotor = new TalonSRX(6);
+  private final DigitalInput slowModeSwitch = new DigitalInput(1);
+  //private final TalonSRX encoderMotor = new TalonSRX(6);
+  private final WPI_TalonSRX encoderMotor = new WPI_TalonSRX(6);
   //private final AHRS ahrs;
 
   private double shooterSpeed = 0;
@@ -62,6 +73,9 @@ public class Robot extends TimedRobot {
   private double lastTime = 15;
   private Servo hangerServo = new Servo(7);
   private double driveSpeed = 0;
+  private double drivePos = 0;
+  private double driveVelocity = 0;
+  
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -80,6 +94,7 @@ public class Robot extends TimedRobot {
     loaderMotor.setInverted(true);
     hangerMotor.setInverted(true);
     hangerServo.setAngle(0);
+    encoderMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
   }
 
   /**
@@ -114,7 +129,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
-      case kCustomAuto:
+      case kDefaultAuto:
         // Put custom auto code here
         if (autoStage == 0){
           intakeRasingMotor.set(.5);
@@ -124,13 +139,13 @@ public class Robot extends TimedRobot {
             autoStage = 1;
             intakeRasingMotor.set(0);
           }
-        else if (autoStage == 1){
+        }else if (autoStage == 1){
           shooterMotor.set(.5);
           if(lastTime - Timer.getMatchTime() > .5){
             lastTime = Timer.getMatchTime();
             autoStage = 2;
           }
-        else if (autoStage == 2){
+        }else if (autoStage == 2){
           loaderMotor.set(.5);
           if (lastTime - Timer.getMatchTime() > 1.5){
             lastTime = Timer.getMatchTime();
@@ -139,7 +154,7 @@ public class Robot extends TimedRobot {
             shooterMotor.set(0);
             loaderMotor.set(0);
           }
-        else if (autoStage == 3){
+        }else if (autoStage == 3){
           m_robotDrive.arcadeDrive(-.61, 0);
           if(lastTime - Timer.getMatchTime() > 2){
             m_robotDrive.arcadeDrive(0, 0);
@@ -147,11 +162,8 @@ public class Robot extends TimedRobot {
 
           }
         }
-        }
-        }
-        }
         break;
-      case kDefaultAuto:
+      case kCustomAuto:
       default:
         // Put default auto code here
         break;
@@ -167,7 +179,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
    /** takes input from the joystick and controls the drive motors using arcade drive */
     System.out.println(EncoderMotor);
-    if (m_leftStick.getRawButton(1)){
+    if (m_leftStick.getRawButton(1) || slowModeSwitch.get()){
       m_robotDrive.arcadeDrive(((-m_leftStick.getY())/2), ((m_leftStick.getX())/2));
        //System.out.println("y");
       //System.out.println(-m_leftStick.getY()/2);
@@ -177,6 +189,13 @@ public class Robot extends TimedRobot {
       //System.out.println(m_rightMotor.get());
       //System.out.println("l");
       //System.out.println(m_leftMotor.get());
+      driveSpeed = encoderMotor.getSpeed();
+      drivePos = encoderMotor.getEncPosition();
+      driveVelocity = encoderMotor.getEncVelocity();
+      System.out.println("speed" + driveSpeed);
+      System.out.println("pos" + drivePos);
+      System.out.println("velocity" + driveVelocity);
+     
     }
     else{
       m_robotDrive.arcadeDrive(-m_leftStick.getY(), m_leftStick.getX());
