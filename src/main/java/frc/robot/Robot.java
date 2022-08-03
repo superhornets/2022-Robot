@@ -63,7 +63,7 @@ public class Robot extends TimedRobot {
   private final MotorController hangerMotor = new PWMTalonSRX(6);
   private final DigitalInput lowerIntakeLimitSwitch = new DigitalInput(4);
   private final DigitalInput upperIntakeLimitSwitch = new DigitalInput(5);
-  private final DigitalInput slowModeSwitch = new DigitalInput(1);
+  private final DigitalInput slowModeSwitch = new DigitalInput(9);
   //private final TalonSRX encoderMotor = new TalonSRX(6);
   private final WPI_TalonSRX encoderMotor = new WPI_TalonSRX(6);
   //private final AHRS ahrs;
