@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import com.kauailabs.navx.frc.AHRS;
 
-import java.beans.Encoder;
+
 import java.sql.Time;
 import javax.swing.plaf.TextUI;
 
@@ -22,6 +22,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
@@ -29,14 +30,11 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMTalonFX;
 import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
 import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.StatusFrameRate;
-import com.ctre.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.*;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -96,7 +94,8 @@ public class Robot extends TimedRobot {
     loaderMotor.setInverted(true);
     hangerMotor.setInverted(true);
     hangerServo.setAngle(0);
-    encoderMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+    encoderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+    shooterEncoder.setDistancePerPulse(1);
   }
 
   /**
@@ -180,7 +179,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
    /** takes input from the joystick and controls the drive motors using arcade drive */
-    System.out.println(EncoderMotor);
+    System.out.println(encoderMotor);
     if (m_leftStick.getRawButton(1) || slowModeSwitch.get()){
       m_robotDrive.arcadeDrive(((-m_leftStick.getY())/2), ((m_leftStick.getX())/2));
        //System.out.println("y");
@@ -191,11 +190,11 @@ public class Robot extends TimedRobot {
       //System.out.println(m_rightMotor.get());
       //System.out.println("l");
       //System.out.println(m_leftMotor.get());
-      driveSpeed = encoderMotor.getSpeed();
-      drivePos = encoderMotor.getEncPosition();
-      driveVelocity = encoderMotor.getEncVelocity();
+      //driveSpeed = encoderMotor.
+      drivePos = encoderMotor.getSelectedSensorPosition();
+      driveVelocity = encoderMotor.getSelectedSensorVelocity();
       
-      System.out.println("speed" + driveSpeed);
+      //System.out.println("speed" + driveSpeed);
       System.out.println("pos" + drivePos);
       System.out.println("velocity" + driveVelocity);
       
@@ -252,6 +251,7 @@ public class Robot extends TimedRobot {
     shooterMotor.set(shooterSpeed);
     shooterEncoderValue = shooterEncoder.getRate();
     System.out.println("Shooter encoder rate" + shooterEncoderValue);
+  
 
     /** controls the hanger motor */
     if(m_rightStick.getRawButton(11)){
