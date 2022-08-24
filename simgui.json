@@ -5,6 +5,23 @@
         "visible": true
       }
     },
+    "Encoders": {
+      "0": {
+        "header": {
+          "open": true
+        }
+      },
+      "window": {
+        "visible": true
+      }
+    },
+    "Other Devices": {
+      "Talon SRX[6]/Quad Encoder": {
+        "header": {
+          "open": true
+        }
+      }
+    },
     "PWM Outputs": {
       "window": {
         "visible": true
@@ -17,12 +34,15 @@
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
       "/LiveWindow/Ungrouped/DigitalInput[4]": "Digital Input",
       "/LiveWindow/Ungrouped/DigitalInput[5]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[9]": "Digital Input",
       "/LiveWindow/Ungrouped/PWMTalonSRX[2]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMTalonSRX[3]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMTalonSRX[4]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMTalonSRX[5]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMTalonSRX[6]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMVictorSPX[5]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon SRX [6]": "Motor Controller",
+      "/LiveWindow/Ungrouped/Talon[2]": "Motor Controller",
       "/SmartDashboard/Auto choices": "String Chooser"
     }
   }

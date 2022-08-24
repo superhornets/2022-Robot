@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
     hangerMotor.setInverted(true);
     hangerServo.setAngle(0);
     encoderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-    shooterEncoder.setDistancePerPulse(1);
+    shooterEncoder.setDistancePerPulse(2048/10);
   }
 
   /**
@@ -107,7 +107,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-
+    shooterEncoderValue = shooterEncoder.getRate();
+    System.out.println("Shooter encoder rate" + shooterEncoderValue);
+    drivePos = encoderMotor.getSelectedSensorPosition();
+    driveVelocity = encoderMotor.getSelectedSensorVelocity();
+      
+    //System.out.println("speed" + driveSpeed);
+    //System.out.println("pos" + drivePos);
+    //System.out.println("velocity" + driveVelocity);
   }
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -180,7 +187,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
    /** takes input from the joystick and controls the drive motors using arcade drive */
     System.out.println(encoderMotor);
-    if (m_leftStick.getRawButton(1) || slowModeSwitch.get()){
+    if (m_leftStick.getRawButton(1)){
       m_robotDrive.arcadeDrive(((-m_leftStick.getY())/2), ((m_leftStick.getX())/2));
        //System.out.println("y");
       //System.out.println(-m_leftStick.getY()/2);
@@ -200,6 +207,9 @@ public class Robot extends TimedRobot {
       
       
      
+    }
+    else if(slowModeSwitch.get()){
+      m_robotDrive.arcadeDrive(((-m_leftStick.getY())/2), ((m_leftStick.getX())/2));
     }
     else{
       m_robotDrive.arcadeDrive(-m_leftStick.getY(), m_leftStick.getX());
