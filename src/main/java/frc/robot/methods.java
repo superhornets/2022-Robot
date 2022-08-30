@@ -8,16 +8,20 @@ public class methods {
     static final int HIGH_ROTATION_SHOOTER = 120;
     static final int LOW_ROTATION_SHOOTER = 40;
     static final double SHOOTER_CHANGE_LIMIT = .05;
-    static final int SHOOTER_CHANGE_FACTOR = 8;
-    static final int INITAL_SHOOTER_CHANGE_FACTOR = 10;
-    
+    static final int SHOOTER_CHANGE_FACTOR = 40;
+    static final int INITAL_SHOOTER_CHANGE_FACTOR = 50;
+
 
     static double lastShooterChange = 0;
 
 
-    static double calculateShooterSpeed(int currentRotations, int targetRotations, double motorSpeed){
+    static double calculateShooterSpeed(Double currentRotations, int targetRotations, double motorSpeed){
         if (Math.abs(targetRotations - currentRotations) < SHOOTER_ACCEPTABLE_ERROR){
             return motorSpeed;
+        }
+        else if(targetRotations == 0){
+            lastShooterChange = 0;
+            return 0;
         }
         else{
             if (lastShooterChange == 0){
