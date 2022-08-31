@@ -45,6 +45,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
+  private static final String kTestMoveForward = "Test Move Forward";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private Joystick m_leftStick;
@@ -85,6 +86,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.addOption("Test Move Forward", kTestMoveForward);
     SmartDashboard.putData("Auto choices", m_chooser);
     m_leftStick = new Joystick(0);
     m_rightStick = new Joystick(1);
@@ -108,6 +110,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     shooterEncoderValue = shooterEncoder.getRate();
+    SmartDashboard.putNumber("Shooter encoder rate", shooterEncoderValue);
     System.out.println("Shooter encoder rate" + shooterEncoderValue);
     drivePos = encoderMotor.getSelectedSensorPosition();
     driveVelocity = encoderMotor.getSelectedSensorVelocity();
@@ -115,6 +118,8 @@ public class Robot extends TimedRobot {
     //System.out.println("speed" + driveSpeed);
     //System.out.println("pos" + drivePos);
     //System.out.println("velocity" + driveVelocity);
+
+    SmartDashboard.putBoolean("Slo-mo", slowModeSwitch.get());
   }
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -128,8 +133,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    m_autoSelected = m_chooser.getSelected();    // This gets the selected string from Shuffleboard using the m_chooser drop-down
+    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);   // This gets the string from the LabVIEW Dashboard
     System.out.println("Auto selected: " + m_autoSelected);
   }
 
@@ -172,6 +177,10 @@ public class Robot extends TimedRobot {
         }
         break;
       case kCustomAuto:
+        break;
+      case kTestMoveForward:
+        // moveForward();
+        break;
       default:
         // Put default auto code here
         break;
