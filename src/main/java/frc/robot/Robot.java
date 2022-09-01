@@ -76,7 +76,8 @@ public class Robot extends TimedRobot {
   private double drivePos = 0;
   private double driveVelocity = 0;
   private double shooterEncoderValue = 0;
-  
+  private int count = 0;
+  private double shoterGoal = 0;
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -97,7 +98,7 @@ public class Robot extends TimedRobot {
     hangerMotor.setInverted(true);
     hangerServo.setAngle(0);
     encoderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-    shooterEncoder.setDistancePerPulse(2048/10);
+    shooterEncoder.setDistancePerPulse(1);
   }
 
   /**
@@ -112,11 +113,16 @@ public class Robot extends TimedRobot {
     shooterEncoderValue = shooterEncoder.getRate();
     SmartDashboard.putNumber("Shooter encoder rate", shooterEncoderValue);
     System.out.println("Shooter encoder rate" + shooterEncoderValue);
-    drivePos = encoderMotor.getSelectedSensorPosition();
-    driveVelocity = encoderMotor.getSelectedSensorVelocity();
+    //drivePos = encoderMotor.getSelectedSensorPosition();
+    //driveVelocity = encoderMotor.getSelectedSensorVelocity();
       
     //System.out.println("speed" + driveSpeed);
-    //System.out.println("pos" + drivePos);
+    if (count == 6){
+      System.out.println("pos" + drivePos);
+      count = 0;
+    }
+    count += 1;
+    
     //System.out.println("velocity" + driveVelocity);
 
     SmartDashboard.putBoolean("Slo-mo", slowModeSwitch.get());
@@ -218,7 +224,7 @@ public class Robot extends TimedRobot {
      
     }
     else if(slowModeSwitch.get()){
-      m_robotDrive.arcadeDrive(((-m_leftStick.getY())/2), ((m_leftStick.getX())/2));
+      m_robotDrive.arcadeDrive(((-m_leftStick.getY())/1.5), ((m_leftStick.getX())/1.5));
     }
     else{
       m_robotDrive.arcadeDrive(-m_leftStick.getY(), m_leftStick.getX());
@@ -257,20 +263,30 @@ public class Robot extends TimedRobot {
     }
     
     /** toggles shooter speed */
+    //if(m_rightStick.getRawButton(4)){
+    //  shooterSpeed = 0;
+    
+    //}
+    //else if(m_rightStick.getRawButton(3)){
+    //  shooterSpeed = 40000;
+    //}
+    //else if(m_rightStick.getRawButton(5)){
+    //  shooterSpeed = 20000;
+   // }
+    /** sets the shooter speed each time through the loop. This is nessesary if the motor shuts off without an input. */
+    
+    shooterEncoderValue = shooterEncoder.getRate();
+    //shooterMotor.set(-methods.calculateShooterSpeed(-shooterEncoderValue, shooterSpeed, shooterMotor.get()));
+    System.out.println("Shooter encoder rate" + shooterEncoderValue);
     if(m_rightStick.getRawButton(4)){
       shooterSpeed = 0;
+      
+    
     }
     else if(m_rightStick.getRawButton(3)){
       shooterSpeed = .4;
     }
-    else if(m_rightStick.getRawButton(5)){
-      shooterSpeed = -.5;
-    }
-    /** sets the shooter speed each time through the loop. This is nessesary if the motor shuts off without an input. */
     shooterMotor.set(shooterSpeed);
-    shooterEncoderValue = shooterEncoder.getRate();
-    System.out.println("Shooter encoder rate" + shooterEncoderValue);
-  
 
     /** controls the hanger motor */
     if(m_rightStick.getRawButton(11)){

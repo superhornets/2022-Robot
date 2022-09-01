@@ -1,12 +1,13 @@
 package frc.robot;
 
 public class methods {
-    static final int SHOOTER_ACCEPTABLE_ERROR = 5;
+    static final int MULTIPLE = 1000;
+    static final int SHOOTER_ACCEPTABLE_ERROR = 1 * MULTIPLE;
     static final double HIGH_ESTIMATE_SHOOTER = .7;
     static final double MID_ESTIMATE_SHOOTER = .4;
     static final double LOW_ESTIMATE_SHOOTER = .2;
-    static final int HIGH_ROTATION_SHOOTER = 120;
-    static final int LOW_ROTATION_SHOOTER = 40;
+    static final int HIGH_ROTATION_SHOOTER = 120 * MULTIPLE;
+    static final int LOW_ROTATION_SHOOTER = 30 * MULTIPLE;
     static final double SHOOTER_CHANGE_LIMIT = .05;
     static final int SHOOTER_CHANGE_FACTOR = 40;
     static final int INITAL_SHOOTER_CHANGE_FACTOR = 50;
@@ -15,7 +16,7 @@ public class methods {
     static double lastShooterChange = 0;
 
 
-    static double calculateShooterSpeed(Double currentRotations, int targetRotations, double motorSpeed){
+    static double calculateShooterSpeed(Double currentRotations, Double targetRotations, double motorSpeed){
         if (Math.abs(targetRotations - currentRotations) < SHOOTER_ACCEPTABLE_ERROR){
             return motorSpeed;
         }
