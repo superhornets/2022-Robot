@@ -9,9 +9,15 @@
         {
           "decKey": 87,
           "incKey": 83
+        },
+        {
+          "decKey": 69,
+          "decayRate": 0.0,
+          "incKey": 82,
+          "keyRate": 0.009999999776482582
         }
       ],
-      "axisCount": 5,
+      "axisCount": 3,
       "buttonCount": 4,
       "buttonKeys": [
         90,
@@ -36,7 +42,8 @@
     {
       "axisConfig": [
         {
-          "decKey": 74
+          "decKey": 74,
+          "incKey": 76
         },
         {
           "decKey": 73,
@@ -80,14 +87,6 @@
       "axisCount": 0,
       "buttonCount": 0,
       "povCount": 0
-    }
-  ],
-  "robotJoysticks": [
-    {
-      "guid": "030000006d04000014c2000000000000"
-    },
-    {
-      "guid": "030000006d04000015c2000000000000"
     }
   ]
 }
