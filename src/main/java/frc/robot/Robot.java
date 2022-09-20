@@ -113,13 +113,16 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     shooterEncoderValue = shooterEncoder.getRate();
     SmartDashboard.putNumber("Shooter encoder rate", shooterEncoderValue);
-    System.out.println("Shooter encoder rate" + shooterEncoderValue);
+    //System.out.println("Shooter encoder rate" + shooterEncoderValue);
+    SmartDashboard.putNumber("Hanger Speed", hangerMotor.get());
+    //System.out.println("Hanger Speed"+ hangerMotor.get());
     //drivePos = encoderMotor.getSelectedSensorPosition();
     //driveVelocity = encoderMotor.getSelectedSensorVelocity();
       
     //System.out.println("speed" + driveSpeed);
     if (count == 6){
-      System.out.println("pos" + drivePos);
+      System.out.println("Hanger Speed"+ hangerMotor.get());
+      //System.out.println("pos" + drivePos);
       count = 0;
     }
     count += 1;
@@ -150,6 +153,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     System.out.println("Auo mode running. stage:" + autoStage);
+    SmartDashboard.putBoolean("Lower Intake Limit Switch", lowerIntakeLimitSwitch.get());
     switch (m_autoSelected) {
       case kDefaultAuto:
         System.out.println("kDefaultAuto Selected" + Timer.getFPGATimestamp());
@@ -159,7 +163,7 @@ public class Robot extends TimedRobot {
           intakeRasingMotor.set(.5);
           intakeMotor.set(-.5);
           shooterMotor.set(.5);
-          if(Timer.getMatchTime()>3 || lowerIntakeLimitSwitch.get()){
+          if(Timer.getFPGATimestamp()>3 || lowerIntakeLimitSwitch.get()){
             lastTime = Timer.getFPGATimestamp();
             autoStage = 1;
             intakeRasingMotor.set(0);
@@ -190,7 +194,63 @@ public class Robot extends TimedRobot {
   
         break;
       case kCustomAuto:
-        break;
+      if (autoStage == 0){
+        System.out.println("Auto Stage 0" + Timer.getFPGATimestamp());
+        intakeRasingMotor.set(.5);
+        intakeMotor.set(-.5);
+        shooterMotor.set(.5);
+        if(Timer.getFPGATimestamp()>3 || lowerIntakeLimitSwitch.get()){
+          lastTime = Timer.getFPGATimestamp();
+          autoStage = 1;
+          intakeRasingMotor.set(0);
+        }
+      }
+      else if(autoStage==1){
+        intakeMotor.set(.5);
+        m_robotDrive.arcadeDrive(.61, 0);
+        shooterMotor.set(.5);
+        if(Math.abs(lastTime-Timer.getFPGATimestamp())>2){
+          m_robotDrive.arcadeDrive(0, 0);
+          lastTime = Timer.getFPGATimestamp();
+          autoStage = 2;
+        }
+      }
+      else if (autoStage == 2){
+        loaderMotor.set(.5);
+        shooterMotor.set(.5);
+        if (Math.abs(lastTime-Timer.getFPGATimestamp())>.25){
+          loaderMotor.set(0);
+          lastTime = Timer.getFPGATimestamp();
+          autoStage = 3;
+        }
+      }
+      else if (autoStage == 3){
+        m_robotDrive.arcadeDrive(-.61, 0);
+        shooterMotor.set(.5);
+        if(Math.abs(lastTime-Timer.getFPGATimestamp())>2){
+          m_robotDrive.arcadeDrive(0, 0);
+          lastTime = Timer.getFPGATimestamp();
+          autoStage = 4;
+        }
+      }
+      else if(autoStage == 4){
+        loaderMotor.set(1);
+        shooterMotor.set(.5);
+        if(Math.abs(lastTime-Timer.getFPGATimestamp())>2){
+          shooterMotor.set(0);
+          loaderMotor.set(0);
+          lastTime = Timer.getFPGATimestamp();
+          autoStage = 5;
+        }
+      }
+      else if(autoStage == 5){
+        m_robotDrive.arcadeDrive(-.7, 0);
+        if (Math.abs(lastTime-Timer.getFPGATimestamp())>2.5){
+          m_robotDrive.arcadeDrive(0, 0);
+          lastTime = Timer.getFPGATimestamp();
+          autoStage = 6;
+        }
+      }
       case kTestMoveForward:
         // moveForward();
         break;
@@ -210,7 +270,7 @@ public class Robot extends TimedRobot {
    /** takes input from the joystick and controls the drive motors using arcade drive */
     System.out.println(encoderMotor);
     if (m_leftStick.getRawButton(1)){
-      m_robotDrive.arcadeDrive(((-m_leftStick.getY())), ((m_leftStick.getX())), false);
+      m_robotDrive.arcadeDrive(((-m_leftStick.getY())/2), ((m_leftStick.getX())/2), false);
        //System.out.println("y");
       //System.out.println(-m_leftStick.getY()/2);
       //System.out.println("x");
@@ -224,11 +284,14 @@ public class Robot extends TimedRobot {
       driveVelocity = encoderMotor.getSelectedSensorVelocity();
       
       //System.out.println("speed" + driveSpeed);
-      System.out.println("pos" + drivePos);
-      System.out.println("velocity" + driveVelocity);
+      //System.out.println("pos" + drivePos);
+      //System.out.println("velocity" + driveVelocity);
       
       
      
+    }
+    else if (m_leftStick.getRawButton(4)||m_leftStick.getRawButton(6)){
+       m_robotDrive.arcadeDrive(((-m_leftStick.getY())), ((m_leftStick.getX())), false);
     }
     else if(slowModeSwitch.get()){
       m_robotDrive.arcadeDrive(((-m_leftStick.getY())*.75), ((m_leftStick.getX())*.75), false);
