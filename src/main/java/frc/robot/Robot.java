@@ -195,65 +195,66 @@ public class Robot extends TimedRobot {
   
         break;
       case kCustomAuto:
-      if (autoStage == 0){
-        System.out.println("Auto Stage 0" + Timer.getFPGATimestamp());
-        intakeRasingMotor.set(.5);
-        intakeMotor.set(-.5);
-        shooterMotor.set(.5);
-        if((Math.abs(lastTime - Timer.getFPGATimestamp()) > 3) || !lowerIntakeLimitSwitch.get()){
-          lastTime = Timer.getFPGATimestamp();
-          autoStage = 1;
-          intakeRasingMotor.set(0);
-        }
-      }else if (autoStage == 1){
-        shooterMotor.set(.5);
-        if(Math.abs(lastTime - Timer.getFPGATimestamp()) > .5){
-          lastTime = Timer.getFPGATimestamp();
-          autoStage = 2;
-        }
-      }else if (autoStage == 2){
-        loaderMotor.set(.5);
-        if (Math.abs(lastTime - Timer.getFPGATimestamp()) > 1.5){
-          lastTime = Timer.getFPGATimestamp();
-          autoStage = 3;
-          intakeMotor.set(0);
-          shooterMotor.set(0);
-          loaderMotor.set(0);
-        }
-      }else if (autoStage == 3){
-        m_robotDrive.arcadeDrive(0.61, 0);
-        intakeMotor.set(1);
-        if(Math.abs(lastTime - Timer.getFPGATimestamp()) > 4){
-          m_robotDrive.arcadeDrive(0, 0);
-          autoStage = 4;
+        if (autoStage == 0){
+          System.out.println("Auto Stage 0" + Timer.getFPGATimestamp());
+          intakeRasingMotor.set(.5);
+          intakeMotor.set(-.5);
+          shooterMotor.set(.5);
+          if((Math.abs(lastTime - Timer.getFPGATimestamp()) > 3) || !lowerIntakeLimitSwitch.get()){
+            lastTime = Timer.getFPGATimestamp();
+            autoStage = 1;
+            intakeRasingMotor.set(0);
+          }
+        }else if (autoStage == 1){
+          shooterMotor.set(.5);
+          if(Math.abs(lastTime - Timer.getFPGATimestamp()) > .5){
+            lastTime = Timer.getFPGATimestamp();
+            autoStage = 2;
+          }
+        }else if (autoStage == 2){
+          loaderMotor.set(.5);
+          if (Math.abs(lastTime - Timer.getFPGATimestamp()) > 1.5){
+            lastTime = Timer.getFPGATimestamp();
+            autoStage = 3;
+            intakeMotor.set(0);
+            shooterMotor.set(0);
+            loaderMotor.set(0);
+          }
+        }else if (autoStage == 3){
+          m_robotDrive.arcadeDrive(0.61, 0);
+          intakeMotor.set(1);
+          if(Math.abs(lastTime - Timer.getFPGATimestamp()) > 4){
+            m_robotDrive.arcadeDrive(0, 0);
+            autoStage = 4;
 
+          }
         }
-      }
-      else if (autoStage == 4){
-        intakeMotor.set(0);
-        shooterMotor.set(.4);
-        m_robotDrive.arcadeDrive(.61, 0);
-        if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 2)){
-          m_robotDrive.arcadeDrive(0, 0);
-          autoStage=5;
+        else if (autoStage == 4){
+          intakeMotor.set(0);
+          shooterMotor.set(.4);
+          m_robotDrive.arcadeDrive(.61, 0);
+          if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 2)){
+            m_robotDrive.arcadeDrive(0, 0);
+            autoStage=5;
+          }
         }
-      }
-      else if (autoStage == 5){
-        shooterMotor.set(.4);
-        loaderMotor.set(1);
-        if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 1.5)){
-          loaderMotor.set(0);
-          shooterMotor.set(0);
-          autoStage = 6;
+        else if (autoStage == 5){
+          shooterMotor.set(.4);
+          loaderMotor.set(1);
+          if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 1.5)){
+            loaderMotor.set(0);
+            shooterMotor.set(0);
+            autoStage = 6;
+          }
+        else if(autoStage == 6){
+          m_robotDrive.arcadeDrive(-61, 0);
+          if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 4)){
+            m_robotDrive.arcadeDrive(0, 0);
+            autoStage = 7;
+          }
         }
-      else if(autoStage == 6){
-        m_robotDrive.arcadeDrive(-61, 0);
-        if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 4)){
-          m_robotDrive.arcadeDrive(0, 0);
-          autoStage = 7;
         }
-      }
-      }
+        break;
       case kTestMoveForward:
         // moveForward();
         if (autoStage == 0){
