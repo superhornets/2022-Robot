@@ -155,6 +155,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     System.out.println("Auo mode running. stage:" + autoStage);
     SmartDashboard.putBoolean("Lower Intake Limit Switch", lowerIntakeLimitSwitch.get());
+    SmartDashboard.putNumber("autoStage", autoStage);
     switch (m_autoSelected) {
       case kDefaultAuto:
         System.out.println("kDefaultAuto Selected" + Timer.getFPGATimestamp());
@@ -197,7 +198,7 @@ public class Robot extends TimedRobot {
       case kCustomAuto:
         if (autoStage == 0){
           System.out.println("Auto Stage 0" + Timer.getFPGATimestamp());
-          intakeRasingMotor.set(.5);
+          intakeRasingMotor.set(1);
           intakeMotor.set(-.5);
           shooterMotor.set(.5);
           if((Math.abs(lastTime - Timer.getFPGATimestamp()) > 3) || !lowerIntakeLimitSwitch.get()){
@@ -213,6 +214,7 @@ public class Robot extends TimedRobot {
           }
         }else if (autoStage == 2){
           loaderMotor.set(.5);
+          intakeMotor.set(1);
           if (Math.abs(lastTime - Timer.getFPGATimestamp()) > 1.5){
             lastTime = Timer.getFPGATimestamp();
             autoStage = 3;
@@ -221,39 +223,51 @@ public class Robot extends TimedRobot {
             loaderMotor.set(0);
           }
         }else if (autoStage == 3){
-          m_robotDrive.arcadeDrive(0.61, 0);
+          m_robotDrive.arcadeDrive(0.515, 0);
           intakeMotor.set(1);
-          if(Math.abs(lastTime - Timer.getFPGATimestamp()) > 4){
+          if(Math.abs(lastTime - Timer.getFPGATimestamp()) > 3){
             m_robotDrive.arcadeDrive(0, 0);
+            lastTime = Timer.getFPGATimestamp();
             autoStage = 4;
 
           }
         }
         else if (autoStage == 4){
-          intakeMotor.set(0);
-          shooterMotor.set(.4);
-          m_robotDrive.arcadeDrive(.61, 0);
-          if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 2)){
+          intakeMotor.set(1);
+          shooterMotor.set(.5);
+          m_robotDrive.arcadeDrive(-.61, 0);
+          if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 1.75)){
             m_robotDrive.arcadeDrive(0, 0);
+
             autoStage=5;
+            lastTime = Timer.getFPGATimestamp();
           }
         }
         else if (autoStage == 5){
           shooterMotor.set(.4);
+          intakeMotor.set(0);
           loaderMotor.set(1);
-          if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 1.5)){
+          m_robotDrive.arcadeDrive(0, 0);
+          if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 2)){
             loaderMotor.set(0);
             shooterMotor.set(0);
             autoStage = 6;
+            lastTime = Timer.getFPGATimestamp();
+            m_robotDrive.arcadeDrive(0, 0);
           }
+        }
         else if(autoStage == 6){
-          m_robotDrive.arcadeDrive(-61, 0);
-          if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 4)){
+          m_robotDrive.arcadeDrive(.61, 0);
+          if ((Math.abs(lastTime - Timer.getFPGATimestamp()) > 2)){
             m_robotDrive.arcadeDrive(0, 0);
             autoStage = 7;
           }
         }
-        }
+          else{
+            m_robotDrive.arcadeDrive(0, 0);
+          }
+        
+        
         break;
       case kTestMoveForward:
         // moveForward();
