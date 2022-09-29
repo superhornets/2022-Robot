@@ -187,7 +187,7 @@ public class Robot extends TimedRobot {
           }
         }else if (autoStage == 3){
           m_robotDrive.arcadeDrive(0.61, 0);
-          if(Math.abs(lastTime - Timer.getFPGATimestamp()) > 2){
+          if(Math.abs(lastTime - Timer.getFPGATimestamp()) > 3){
             m_robotDrive.arcadeDrive(0, 0);
             autoStage = 4;
 
@@ -368,7 +368,7 @@ public class Robot extends TimedRobot {
     else if (m_leftStick.getRawButton(4)||m_leftStick.getRawButton(6)){
        m_robotDrive.arcadeDrive(((-m_leftStick.getY())), ((m_leftStick.getX())), false);
     }
-    else if(slowModeSwitch.get()){
+    else /*if(slowModeSwitch.get())*/{
       m_robotDrive.arcadeDrive(((-m_leftStick.getY())*.75), ((m_leftStick.getX())*.75), false);
     }
     //else{
@@ -376,10 +376,14 @@ public class Robot extends TimedRobot {
     //}
     /** Controls the speed of the intake */
     if(m_leftStick.getRawButton(3)){
-      intakeMotor.set(1);
+      intakeMotor.set(0.8);
     }
     else if(m_leftStick.getRawButton(2)){
       intakeMotor.set(-1);
+    }
+    else if(m_leftStick.getRawButton(8)){
+      intakeMotor.set(1);
+      SmartDashboard.putNumber("Throttle", m_leftStick.getThrottle());
     }
     else{
       intakeMotor.set(0);
