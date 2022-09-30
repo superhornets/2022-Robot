@@ -344,7 +344,11 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
    /** takes input from the joystick and controls the drive motors using arcade drive */
     System.out.println(encoderMotor);
-    if (m_leftStick.getRawButton(1)){
+    
+    if(!slowModeSwitch.get()){
+      m_robotDrive.arcadeDrive(-m_leftStick.getY()*.45, m_leftStick.getX()*.45, false);
+    }
+    else if (m_leftStick.getRawButton(1)){
       m_robotDrive.arcadeDrive(((-m_leftStick.getY())/2), ((m_leftStick.getX())/2), false);
        //System.out.println("y");
       //System.out.println(-m_leftStick.getY()/2);
@@ -365,14 +369,13 @@ public class Robot extends TimedRobot {
       
      
     }
+    
     else if (m_leftStick.getRawButton(4)||m_leftStick.getRawButton(6)){
        m_robotDrive.arcadeDrive(((-m_leftStick.getY())), ((m_leftStick.getX())), false);
     }
-    else if(slowModeSwitch.get()){
-      m_robotDrive.arcadeDrive(((-m_leftStick.getY())*.75), ((m_leftStick.getX())*.75), false);
-    }
+    
     else{
-      m_robotDrive.arcadeDrive(-m_leftStick.getY()*.45, m_leftStick.getX()*.45, false);
+      m_robotDrive.arcadeDrive(((-m_leftStick.getY())*.75), ((m_leftStick.getX())*.75), false);
     }
     /** Controls the speed of the intake */
     if(m_leftStick.getRawButton(3)){
