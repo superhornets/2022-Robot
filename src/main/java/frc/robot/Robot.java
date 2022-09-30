@@ -368,12 +368,12 @@ public class Robot extends TimedRobot {
     else if (m_leftStick.getRawButton(4)||m_leftStick.getRawButton(6)){
        m_robotDrive.arcadeDrive(((-m_leftStick.getY())), ((m_leftStick.getX())), false);
     }
-    else /*if(slowModeSwitch.get())*/{
+    else if(slowModeSwitch.get()){
       m_robotDrive.arcadeDrive(((-m_leftStick.getY())*.75), ((m_leftStick.getX())*.75), false);
     }
-    //else{
-      //m_robotDrive.arcadeDrive(-m_leftStick.getY(), m_leftStick.getX(), false);
-    //}
+    else{
+      m_robotDrive.arcadeDrive(-m_leftStick.getY()*.45, m_leftStick.getX()*.45, false);
+    }
     /** Controls the speed of the intake */
     if(m_leftStick.getRawButton(3)){
       intakeMotor.set(0.8);
